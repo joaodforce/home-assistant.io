@@ -50,6 +50,15 @@ The Samsung Smart TV integration provides the following entities and functionali
 
 {% include integrations/triggers.md %}
 
+## Options
+
+Options for Samsung Smart TVs can be set by going to **Settings** > **Devices & services** > **Samsung Smart TV** > **Configuration**.
+
+{% configuration_basic %}
+Event listener port:
+  description: "Local port to listen on for volume and mute events sent by the TV. If this is not set, a random port will be allocated. Use this if a firewall sits between the TV and Home Assistant, so that a single port can be allowed."
+{% endconfiguration_basic %}
+
 ## Data updates
 
 The **SamsungTV** integration uses a local REST API with a WebSocket notification channel for immediate state information for media metadata, playback progress, volume level, and other state information.
@@ -532,7 +541,7 @@ The TV then reports volume and mute changes through UPnP events. These need a co
 2. It sends a `SUBSCRIBE` request to the TV with a `CALLBACK` header pointing to that server: `http://<Home Assistant address>:<port>/notify`.
 3. The TV answers with a subscription ID and a timeout. From then on, it sends a `NOTIFY` request to the callback address whenever the volume or mute state changes. Home Assistant renews the subscription before it expires.
 
-Masquerading does not change the callback address, so the TV connects to Home Assistant directly. If your firewall blocks connections from the TV's subnet to Home Assistant, changes made with the remote are not shown in Home Assistant, but setting the volume from Home Assistant still works. To receive the events, allow TCP connections from the TV to Home Assistant on that port range. The port changes every time Home Assistant starts, so it cannot be limited to a single port.
+Masquerading does not change the callback address, so the TV connects to Home Assistant directly. If your firewall blocks connections from the TV's subnet to Home Assistant, changes made with the remote are not shown in Home Assistant, but setting the volume from Home Assistant still works. To receive the events, set the **Event listener port** [option](#options) and allow TCP connections from the TV to Home Assistant on that port. Without the option, the port changes every time Home Assistant starts, so you would need to allow the whole range.
 
 #### Turning on the TV
 
